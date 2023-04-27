@@ -1,12 +1,35 @@
-from row_sparql_util import *
+from .raw_sparql_util import *
 
 
 def create_triple(subject, predicate, object):
-    return update('INSERT DATA {' + f'{subject} {predicate} {object}' + '}')
+    return update('INSERT DATA {' + f'{subject.__str__()} {predicate.__str__()} {object.__str__()}' + '}')
 
 
-m  = Node('http://www.w3.org/2023/03/31-my#maks')
-n  = Node('http://www.w3.org/2023/03/31-my#name')
-ml = Literal('Maksim')
+def delete_all_triple():
+    return update(' DELETE  { ?subject ?predicate ?object } WHERE { ?subject ?predicate ?object}')
 
-print(create_triple(m, n, ml))
+
+def delete_triple(subject, predicate, object):
+    return update(' DELETE  {' + f'{subject.__str__()} {predicate.__str__()} {object.__str__()}' + '} WHERE { }')
+
+
+def get_all_triple():
+    return query('SELECT * WHERE { ?subject ?predicate ?object }')
+
+
+def get_triple(subject, predicate, object) -> ResultSet:
+    if subject is None:
+        subject = "?subject"
+    if predicate is None:
+        predicate = "?predicate"
+    if object is None:
+        object = "?object"
+    return query('SELECT * WHERE {' + f'{subject.__str__()} {predicate.__str__()} {object.__str__()}' + '}')
+
+
+def get_tripleRequest(sparqlRequest):
+    return query(sparqlRequest)
+
+
+def get_dict_triple(triplesRaw):
+    return triplesRaw.rows()

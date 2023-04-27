@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+SPARQL Requests
+{% endblock %}
+
+{% block content %}
+
+<script>
+  var c = document.getElementById('Requests')
+  console.log(c)
+  c.classList.add('active')
+</script>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.body }}<br>
+    <button type="submit" class="btn btn-success" name="Submit">Request</button>
+    <span>{{ context.error }}</span>
+</form>
+
+</br>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+            {% for name in result.names %}
+              <th scope="col">{{ name }}</th>
+            {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+            {% for row in result.rows %}
+            <tr>
+                {% for key, value in row.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{% endblock %}

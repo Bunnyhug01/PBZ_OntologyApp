@@ -1,0 +1,172 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Ontology
+{% endblock %}
+
+
+{% block content %}
+
+<script>
+  var c = document.getElementById('Ontology')
+  console.log(c)
+  c.classList.add('active')
+</script>
+
+
+<div class="btn-group">
+  <div class="btn-group">
+    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      Add Class
+    </button>
+    <ul class="dropdown-menu">
+      <form method='post'>
+        {% csrf_token %}
+        <li><input placeholder="Enter name" class="form-control dropdown-item" type="text" id="classInputName" name="classInputName"></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button type="submit" class="dropdown-item" name="addClass">Add</button></li>
+      </form>
+    </ul>
+  </div>
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      Add Instance
+    </button>
+    <ul class="dropdown-menu">
+      <form method='post'>
+        {% csrf_token %}
+        <li><input placeholder="Enter name" class="form-control dropdown-item" type="text" id="individualInputName" name="individualInputName"></li></br>
+        <li><input placeholder="Enter class" class="form-control dropdown-item" type="text" id="individualInput" name="individualInput"></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button type="submit" class="dropdown-item" name="addInstance">Add</button></li>
+      </form>
+    </ul>
+  </div>
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      Add Object Property
+    </button>
+    <ul class="dropdown-menu">
+      <form method='post'>
+        {% csrf_token %}
+        <li><input placeholder="Enter name" class="form-control dropdown-item" type="text" id="objectPropertyInputName" name="objectPropertyInputName"></li></br>
+        <li><input placeholder="Enter subject" class="form-control dropdown-item" type="text" id="objectPropertyInputOne" name="objectPropertyInputOne"></li></br>
+        <li><input placeholder="Enter object" class="form-control dropdown-item" type="text" id="objectPropertyInputTwo" name="objectPropertyInputTwo"></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button type="submit" class="dropdown-item" name="addObjectProperty">Add</button></li>
+      </form>
+    </ul>
+  </div>
+</div>
+
+</br></br>
+
+{% if context.classes %}
+<div class="accordion" id="accordionExample">
+  {% for el in context.classes %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading{{ forloop.counter0 }}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter0 }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter0 }}">
+        {{ el.0 }}
+      </button>
+    </h2>
+    <div id="collapse{{ forloop.counter0 }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter0 }}" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Super Classes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in el.1 %}
+              <tr>
+                <td>{{ i }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Subclasses</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in el.2 %}
+              <tr>
+                <td>{{ i }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Instance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in el.3 %}
+              <tr>
+                <td>{{ i }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          
+          <form method='post'>
+            {% csrf_token %}
+
+            <div class="input-group">
+              <input placeholder="Enter super class" class="form-control" type="text" id="classInputOne" name="classInputOne"></br>
+              <button type="submit" class="btn btn-success float-end" name="addSuperClass" value="{{ el.0 }}">Add</button>
+            </div>
+
+            </br>
+
+            <div class="input-group">
+              <input placeholder="Enter Subclass" class="form-control" type="text" id="classInputTwo" name="classInputTwo">
+              <button type="submit" class="btn btn-success float-end" name="addSubClass" value="{{ el.0 }}">Add</button>
+            </div>
+
+            </br>
+
+            <div class="input-group">
+              <input placeholder="Enter new name" class="form-control" type="text" id="classEditOne" name="newName">
+              <button type="submit" class="btn btn-warning float-end" name="Edit" value="{{ el.0 }}">Edit</button>
+            </div>
+            
+            </br>
+
+            <button type="submit" class="btn btn-danger btn-sm float-end" name="Delete" value="{{ el.0 }}">Delete</button>
+
+          </form>
+
+          </br>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+
+  <style>
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10%;
+    }
+  </style>
+
+  <img src="https://media.tenor.com/ywIY7WlJRLwAAAAi/yes-please-sir-waiting.gif" alt="Yes Please Sir Waiting Sticker" width="173" height="173" />
+  <p style="text-align: center;">No classes. Please add some...</p>
+{% endif %}
+
+{% endblock %}

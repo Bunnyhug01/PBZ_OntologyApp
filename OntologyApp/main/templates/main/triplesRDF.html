@@ -1,0 +1,43 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Triples
+{% endblock %}
+
+{% block content %}
+
+<script>
+  var c = document.getElementById('Triples')
+  console.log(c)
+  c.classList.add('active')
+</script>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Subject</th>
+          <th scope="col">Predicate</th>
+          <th scope="col">Object</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for el in context.triples %}
+        <tr>
+          <td>{{ el.subject }}</td>
+          <td>{{ el.predicate }}</td>
+          <td>{{ el.object }}</td>
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              
+              <button type="submit" class="btn btn-danger float-end" name="Delete" value="{{ el.subject }} {{ el.predicate }} {{ el.object }}">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}

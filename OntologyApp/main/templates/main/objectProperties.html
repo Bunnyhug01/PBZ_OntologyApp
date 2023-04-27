@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+Object Properties
+{% endblock %}
+
+{% block content %}
+
+<script>
+  var c = document.getElementById('Object Properties')
+  console.log(c)
+  c.classList.add('active')
+</script>
+
+<style>
+  @media (max-width: 767px) {
+    .table-responsive .dropdown-menu {
+        position: static !important;
+    }
+  }
+  @media (min-width: 768px) {
+      .table-responsive {
+          overflow: visible;
+      }
+  }
+</style>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Object Property</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for el in context.objectProperties %}
+        <tr>
+          <td>{{ el }}</td>
+          <td>
+            <div class="btn-group float-end">
+              <form method='post'>
+                {% csrf_token %}
+                <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  Edit Property
+                </button>
+                <ul class="dropdown-menu">
+                  <li><input placeholder="Enter new name" class="form-control dropdown-item" type="text" id="objectPropertyEditNewName" name="objectPropertyEditNewName"></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><button type="submit" class="dropdown-item" name="Edit" value="{{ el }}">Edit</button></li> 
+                </ul>
+                <button type="submit" class="btn btn-danger" name="Delete" value="{{ el }}">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock %}
